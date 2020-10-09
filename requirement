@@ -1,0 +1,6 @@
+scipy==1.4.1
+opencv-python==4.1.2.30
+numpy==1.18.4
+keras-efficientnets==0.1.7
+Keras==2.2.4
+bayesian-optimization
