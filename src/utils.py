@@ -55,7 +55,7 @@ def make_file(output_path, backbone):
     log_path = os.path.join(output_path, "_".join([backbone, curr_time, "log"]))
     os.mkdir(model_path)
     os.mkdir(log_path)
-    for mode_name in ["grid_ea", "bayes_opt"]:
+    for mode_name in ["grid_ea", "bayes_converge", "bayes_global"]:
         os.mkdir(os.path.join(model_path, mode_name))
         os.mkdir(os.path.join(log_path, mode_name))
     cprint("[Model Path]", model_path)

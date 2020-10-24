@@ -170,7 +170,6 @@ class BayesOpt:
         # save model
         model_path = model_path + str(round(score, 2)) + ".h5"
         model.save(model_path)
-
         # add to model queue for faster converge
         self.model_queue.append_info(model_path=model_path, log_lr=log_lr, train_params=(score, num_epcoch))
         return score
