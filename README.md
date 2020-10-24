@@ -1,8 +1,8 @@
 # HyperTuner: Automated Hyperparameter Tuning for Deep Neural Network
 
-HyperTuner is an automated integrated hyperparameter tuner for existed large-scale neural networks.
+HyperTuner is an automated integrated hyperparameter tuner for finetuning classification neural networks.
 
-Currently HyperTuner supports frameworks referring to [load_base_model.py](src/load_base_model.py):
+Currently HyperTuner supports frameworks found in [load_base_model.py](src/load_base_model.py):
 - xception
 - vgg16
 - resnet18, resnet50, resnet34
@@ -14,7 +14,7 @@ Currently HyperTuner supports frameworks referring to [load_base_model.py](src/l
 
 ## Usage
 ### Requirement
-Python 3.5 is recommended for the repo. Before setting up the dependencies, we highly encourage using a 
+Python 3.5+ is recommended for the repo. Before setting up the dependencies, we highly encourage using a 
 virtual environment, because sometimes there are version conflicts problems.
 
 - ```pip3 install -r requirement```
@@ -56,18 +56,30 @@ class Config:
 Train on dataset bag pattern
 - gpu: 0,1,2,3
 - with 0.15 of the training set as validation set
-- model preserved in ./models/[training start time]
+- model preserved in `./models/[training start time]`
 - backbone model: EfficientNetB2
 - image size: (260, 260)
 
-```python3 main.py -gpu 0,1,2,3 -dataset xxx -backbone EfficientNetB2 -img_shape 260 -op ./models```
-The command generates:
-- ./models/[training start time]/reflection.csv records 'label->encoded' reflection
-- ./models/[training start time]/
+```python3 main.py -gpu 0,1,2,3 -dataset xxx/bag_pattern -backbone EfficientNetB2 -img_shape 260 -op ./models```
+
+
+Train results:
+- Label reflection: `./models/[training start time]/reflection.csv records 'label->encoded' reflection`
+
+| label | encoded |
+| ------ | ------- |
+| geometric | 0 |
+| tribal | 1 |
+| zebra | 2 |
+| plaid | 3 |
+
+- `./models/[training start time]/`
+- `./models/[training start time]_log/`
 
 
 ### HyperTune your own model
 Go to [load_base_model.py](./src/load_base_model.py), change the content as follow
+
 ```
 if model_name == [Your model name]:
     from [Your library] import [model class name] as base

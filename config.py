@@ -1,6 +1,6 @@
 
 BayesConfig = {
-    "pbounds": {"converge_log_lr": (-6, -3), "global_log_lr": (-6, -3)},
+    "pbounds": {"global_log_lr": (-6, -3), "neuron_shrink": (0.9, 0.1)},
     "max_dense_layers": 3,
     "bayes_init_points": 5,
     "bayes_num_iter": 25,

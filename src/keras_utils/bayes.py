@@ -41,37 +41,26 @@ class BayesOpt:
         if self.pooling_size <= 2 * self.params["n_classes"]:
             return
 
-        for mid_dense_num in range(1, self.config.max_dense_layers):
-            curr_pbound = self.config.pbounds.copy()
-            min_shrink, max_shrink = self.get_shrink_scale(mid_dense_num)
-            curr_pbound["neuron_shrink"] = (min_shrink, max_shrink)
-            optimizer = BayesianOptimization(f=self.eval,
-                                             pbounds=curr_pbound,
-                                             verbose=2,
-                                             random_state=42)
-            optimizer.maximize(init_points=self.config.bayes_init_points, n_iter=self.config.bayes_num_iter)
-        return
+        optimizer = BayesianOptimization(f=self.eval,
+                                         pbounds=BayesConfig["pbounds"],
+                                         verbose=2,
+                                         random_state=42)
+
+        optimizer.maximize(init_points=BayesConfig["bayes_init_points"], n_iter=BayesConfig["bayes_num_iter"])
 
     def get_pooling_size(self):
         model = get_base_model(backbone=self.backbone, imgshape=self.imgsize)
         last_layer_shape = model.layers[-1].input_shape[-1]
         return last_layer_shape
 
-    def get_shrink_scale(self, dense_num):
-        n_classes = self.params["n_classes"]
-        res = (n_classes * 2) / self.pooling_size
-        min_shrink, max_shrink = res ** (1 / dense_num), res ** (1 / (dense_num + 1))
-        return min_shrink * 0.8 + max_shrink * 0.2, min_shrink * 0.2 + max_shrink * 0.8
-
-    def eval(self, converge_log_lr, global_log_lr, neuron_shrink):
-        # TODO: acquire a model from model queue
-        model_path, em_log_lr = self.model_queue.random_get()
+    def eval(self, global_log_lr, neuron_shrink):
+        model_path, em_log_lr = self.model_queue.k_crossover(1)
         model = self.generate_model(base_name=model_path,
                                     neuron_shrink=neuron_shrink,
                                     num_classes=self.params["n_classes"])
 
         # train on dense layers
-        score_converge = self.fit(model=model, log_lr=converge_log_lr, layers="top")
+        score_converge = self.fit(model=model, log_lr=em_log_lr, layers="top")
         # train on all layers
         score_global = self.fit(model=model, log_lr=global_log_lr, layers="all")
         return max(score_converge, score_global)
@@ -139,10 +128,8 @@ class BayesOpt:
         model_path = os.path.join(self.model_path, mode, curr_time)
         log_path = os.path.join(self.log_path, mode, curr_time)
 
-        early_stopping = EarlyStopping(monitor="val_acc", patience=self.config.patience, restore_best_weights=True)
-        tensor_board = LRTensorBoard(log_name=log_path)
-
-        model.summary()
+        early_stopping = EarlyStopping(monitor="val_acc", patience=BayesConfig["patience"], restore_best_weights=True)
+        tensor_board = LRTensorBoard(log_dir=log_path)
 
         # multi gpu acceleration
         if self.gpu_cnt > 1:
@@ -153,7 +140,7 @@ class BayesOpt:
                                    metrics=[keras.losses.categorical_crossentropy, "acc"])
 
             history = parallel_model.fit_generator(generator=self.gen_train,
-                                                   epochs=self.config.max_epoch,
+                                                   epochs=BayesConfig["max_epoch"],
                                                    verbose=1,
                                                    validation_data=self.gen_valid,
                                                    callbacks=[early_stopping, tensor_board],
@@ -169,7 +156,7 @@ class BayesOpt:
                           metrics=["categorical_crossentropy", "acc"])
 
             history = model.fit_generator(generator=self.gen_train,
-                                          epochs=self.config.max_epoch,
+                                          epochs=BayesConfig["max_epoch"],
                                           verbose=1,
                                           validation_data=self.gen_valid,
                                           callbacks=[early_stopping, tensor_board],
