@@ -1,6 +1,7 @@
 # coding=utf-8
 # Created on 2020-09-12 17:19
-# Copyright © 2020 Alan. All rights reserved.
+# Copyright 2020 Alan He
+# SPDX-License-Identifier: Apache-2.0
 
 from src.utils import cprint, fetch_time
 from src.keras_utils.customized_callbacks import LRTensorBoard

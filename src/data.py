@@ -1,6 +1,7 @@
 # coding=utf-8
 # Created on 2020-05-21 09:35
-# Copyright © 2020 Alan. All rights reserved.
+# Copyright 2020 Alan He
+# SPDX-License-Identifier: Apache-2.0
 
 from torchvision import transforms
 from sklearn.model_selection import train_test_split

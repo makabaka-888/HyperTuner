@@ -1,6 +1,7 @@
 # coding=utf-8
 # Created on 2020-07-09 10:22
-# Copyright © 2020 Alan. All rights reserved.
+# Copyright 2020 Alan He
+# SPDX-License-Identifier: Apache-2.0
 from termcolor import colored
 import datetime
 import os

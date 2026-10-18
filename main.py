@@ -1,6 +1,7 @@
 # coding=utf-8
 # Created on 2020-07-08 11:10
-# Copyright © 2020 Alan. All rights reserved.
+# Copyright 2020 Alan He
+# SPDX-License-Identifier: Apache-2.0
 import warnings
 from warnings import simplefilter
 import logging
@@ -17,9 +18,8 @@ from src.search import model_search
 
 ap = argparse.ArgumentParser()
 # --------------------------- dataloading & outputs -----------------------------
-ap.add_argument("-d", "--dataset", required=False, help="path to input dataset (i.e., directory of images)",
-                default="path/to/dataset"
-                )
+ap.add_argument("-d", "--dataset", required=True,
+                help="path to the dataset: one sub-folder of images per label")
 ap.add_argument("-op", "--output_path", required=False, help="path to save output model", default="./models")
 ap.add_argument("-v", "--val_split", required=False, help="validation_split", type=float, default=0.15)
 ap.add_argument("-im", "--imgsize", required=False, help="normalized image shape", type=int, default=260)

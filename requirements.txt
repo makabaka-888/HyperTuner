@@ -1,0 +1,16 @@
+# HyperTuner was written in 2020 against Keras 2.2.4 on TensorFlow 1.x.
+# Use Python 3.6 or 3.7; newer Pythons cannot install these pins.
+tensorflow-gpu==1.15.5
+Keras==2.2.4
+# the 0.0.x API, where `from efficientnet import EfficientNetB0` works
+efficientnet==0.0.4
+keras-efficientnets==0.1.7
+bayesian-optimization
+scikit-learn
+scipy==1.4.1
+numpy==1.18.4
+opencv-python==4.1.2.30
+Pillow
+termcolor
+# only for inference.py
+torchvision

@@ -1,6 +1,7 @@
 # coding=utf-8
 # Created  on 2020-07-08 09:54
-# Copyright © 2020 Alan. All rights reserved.
+# Copyright 2020 Alan He
+# SPDX-License-Identifier: Apache-2.0
 # for evaluating the single image
 
 from torchvision import transforms
